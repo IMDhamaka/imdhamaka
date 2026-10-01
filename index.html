@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDhamaka</title>
+
+    <!-- Google Fonts: VT323 for MC feel, Poppins for text -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Swiper.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --mc-bg: #1e1e24;
+            --mc-panel: #2b2b2b;
+            --mc-border-light: #555555;
+            --mc-border-dark: #111111;
+            --mc-green: #55FF55;
+            --mc-blue: #55FFFF;
+            --text-main: #E0E0E0;
+            --font-pixel: 'VT323', monospace;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--mc-bg);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            /* Authentic MC dirt/stone background texture feel */
+            background-image:
+                    linear-gradient(rgba(10, 10, 12, 0.8), rgba(10, 10, 12, 0.9)),
+                    url('data:image/svg+xml;utf8,<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" fill="%23222" /><rect x="32" y="32" width="32" height="32" fill="%23222" /><rect x="32" width="32" height="32" fill="%232a2a2a" /><rect y="32" width="32" height="32" fill="%232a2a2a" /></svg>');
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, .pixel-text {
+            font-family: var(--font-pixel);
+            letter-spacing: 1px;
+        }
+
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(circle, rgba(85, 255, 85, 0.1) 0%, transparent 70%);
+            border-bottom: 4px solid var(--mc-border-dark);
+        }
+
+        .title-container {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        header h1 {
+            font-size: 5rem;
+            color: var(--mc-green);
+            text-shadow: 4px 4px 0px #000, 8px 8px 0px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            color: #ccc;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border: 2px solid var(--mc-border-light);
+            box-shadow: inset -2px -2px 0px var(--mc-border-dark), inset 2px 2px 0px #777;
+        }
+
+        .feature-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 100px 20px;
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            margin-bottom: 150px;
+        }
+
+        /* Alternating Layout */
+        .feature-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-text {
+            flex: 1;
+            min-width: 300px;
+            background: var(--mc-panel);
+            padding: 40px;
+            border: 4px solid #000;
+            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.6), inset 4px 4px 0px rgba(255,255,255,0.1), 10px 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .feature-text:hover {
+            transform: scale(1.02);
+        }
+
+        .feature-text h2 {
+            font-size: 3rem;
+            color: #FFD700;
+            text-shadow: 3px 3px 0px #000;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed #555;
+            padding-bottom: 10px;
+        }
+
+        .feature-text p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #bbb;
+        }
+
+        .feature-media {
+            flex: 1.2; /* Slightly wider for media */
+            min-width: 320px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .swiper {
+            width: 100%;
+            /* CRITICAL: Enforce strict 16:9 ratio for normal gameplay media */
+            aspect-ratio: 16 / 9;
+            padding: 20px 0; /* Room for coverflow 3D effect shadows */
+            overflow: visible; /* Let coverflow pop out slightly */
+        }
+
+        .swiper-slide {
+            width: 80%;
+            background-color: #000;
+            border: 4px solid #222;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            cursor: pointer; /* Indicate it can be clicked for lightbox */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .swiper-slide::after {
+            content: "\f00e"; /* FontAwesome Search-plus icon */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px #000;
+            transition: transform 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .swiper-slide:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .swiper-slide img, .swiper-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Fill the 16:9 space perfectly */
+            pointer-events: none; /* Let swiper handle clicks/drags */
+        }
+
+        /* Minecraft style navigation arrows */
+        .swiper-button-next, .swiper-button-prev {
+            color: #fff !important;
+            background: #555;
+            border: 2px solid #000;
+            box-shadow: inset -2px -2px 0px rgba(0,0,0,0.6), inset 2px 2px 0px rgba(255,255,255,0.4);
+            width: 45px !important;
+            height: 45px !important;
+        }
+
+        .swiper-button-next:active, .swiper-button-prev:active {
+            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.6), inset -2px -2px 0px rgba(255,255,255,0.4);
+        }
+
+        .swiper-button-next::after, .swiper-button-prev::after {
+            font-size: 1.2rem !important;
+            font-weight: 900;
+        }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #lightbox.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 4px solid var(--mc-border-light);
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+            background: #000;
+        }
+
+        #lightbox.show .lightbox-content-wrapper {
+            transform: scale(1);
+        }
+
+        .lightbox-content-wrapper img, .lightbox-content-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 40px;
+            height: 40px;
+            background: #FF5555;
+            color: #fff;
+            border: 2px solid #000;
+            box-shadow: inset -2px -2px 0px rgba(0,0,0,0.5), inset 2px 2px 0px rgba(255,255,255,0.5);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .lightbox-close:active {
+            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.5), inset -2px -2px 0px rgba(255,255,255,0.5);
+        }
+
+        .mc-btn {
+            display: inline-block;
+            font-family: var(--font-pixel);
+            font-size: 2rem;
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            margin: 10px;
+            background-color: #388E3C;
+            border: 4px solid #000;
+            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.5), inset 4px 4px 0px rgba(255,255,255,0.4), 0 8px 15px rgba(0,0,0,0.8);
+            transition: all 0.1s;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .mc-btn:active {
+            transform: translateY(4px);
+            box-shadow: inset 4px 4px 0px rgba(0,0,0,0.5), inset -4px -4px 0px rgba(255,255,255,0.4), 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        .mc-btn.spigot {
+            background-color: #F57C00; /* Orange for Spigot */
+        }
+
+        footer {
+            text-align: center;
+            padding: 80px 20px 50px;
+            background: #0a0a0c;
+            border-top: 4px solid #000;
+            position: relative;
+        }
+
+        .discord-box {
+            display: inline-block;
+            background: #5865F2; /* Discord Blurple */
+            padding: 15px 40px;
+            font-family: var(--font-pixel);
+            font-size: 2rem;
+            color: #fff;
+            border: 4px solid #000;
+            box-shadow: inset -4px -4px 0px rgba(0,0,0,0.4), inset 4px 4px 0px rgba(255,255,255,0.4);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .feature-row, .feature-row:nth-child(even) {
+                flex-direction: column;
+                gap: 40px;
+            }
+            header h1 { font-size: 3.5rem; }
+            .swiper { aspect-ratio: 16/9; } /* Keeps aspect ratio on mobile */
+        }
+        /* --- Minecraft Helper Notification --- */
+        .mc-helper {
+            position: fixed;
+            bottom: -250px;
+            left: 20px; /* Locks it to the bottom left */
+            z-index: 999999; /* Forces it above EVERYTHING else */
+            display: flex;
+            align-items: flex-end;
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .mc-helper.show {
+            bottom: 20px;
+        }
+
+        .helper-img {
+            height: 140px;
+            animation: bob 2s infinite ease-in-out;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.6));
+            pointer-events: none;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .speech-bubble {
+            background: #fff;
+            color: #000;
+            padding: 12px 20px;
+            border: 4px solid #000;
+            font-family: var(--font-pixel);
+            font-size: 1.5rem;
+            position: relative;
+            margin-bottom: 110px;
+            margin-right: -20px;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.8);
+            opacity: 0;
+            transform: scale(0.8) rotate(-5deg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+            pointer-events: auto; /* Allows clicks inside the bubble */
+        }
+
+        .mc-helper.show .speech-bubble {
+            opacity: 1;
+            transform: scale(1) rotate(-5deg);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            right: 20px;
+            border-width: 15px 0 0 15px;
+            border-style: solid;
+            border-color: #000 transparent transparent transparent;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            right: 23px;
+            border-width: 10px 0 0 10px;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+            z-index: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #FF5555;
+            color: white;
+            border: 3px solid #000;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+            transition: transform 0.1s;
+            pointer-events: auto !important; /* FORCES the button to work */
+            z-index: 100;
+        }
+
+        .close-btn:hover {
+            background: #ff3333;
+            transform: scale(1.1);
+        }
+
+
+
+        /* --- Animated Scroll Indicator --- */
+        .scroll-indicator {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 0.85;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .scroll-indicator p {
+            color: #FFAA00; /* Minecraft Gold */
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .arrow-bounce {
+            font-size: 2.5rem;
+            color: var(--mc-green);
+            text-shadow: 0 0 15px rgba(85, 255, 85, 0.6), 2px 2px 0 #000;
+            animation: bounce 2s infinite cubic-bezier(0.28, 0.84, 0.42, 1);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        /* Smooth scrolling for the whole page */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+
+    <header>
+        <div class="title-container" data-aos="zoom-in" data-aos-duration="1000">
+            <h1>TIME SMP </h1>
+        </div>
+        <p class="pixel-text" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">Time is everything! So Fight..,Earn..,Save..and Survive..</p>
+
+        <!-- New Animated Scroll Indicator -->
+        <a href="#features-start" class="scroll-indicator" data-aos="fade-in" data-aos-delay="800" data-aos-duration="1500">
+            <p class="pixel-text">Keep Scrolling!</p>
+            <div class="arrow-bounce">
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
+        </a>
+    </header>
+
+    <!-- Add this ID to your feature container so the arrow can click/scroll to it -->
+    <div id="features-start" class="feature-container"></div>
+
+
+<div class="feature-container">
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-right">
+            <h2>1. Four Legendary Gems</h2>
+            <p> T - Torex, I - Iythron, M - Majesty, and E - Evron (T-I-M-E) with unique active/passive abilities (Ex : Time Freeze, Regeneration II, Buffs, and Permanent Ban power!)</p>
+
+        </div>
+        <div class="feature-media" data-aos="fade-left">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="TOREX.png" alt="Combat 1"></div>
+                    <div class="swiper-slide"><img src="IYTHRON.png" alt="Combat 2"></div>
+                    <div class="swiper-slide"><img src="MAJESTY.png" alt="Combat 3"></div>
+                    <div class="swiper-slide"><img src="EVRON.png" alt="Combat 3"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-left">
+            <h2>2. Time-Steal PvP</h2>
+            <p>Kill other players to steal a chunk of their playtime balance.</p>
+            <p>If you loose all your time.. You will be eliminated to Spectator mode and never gonna comeback untill you are revived through Iythron Gem.</p>
+        </div>
+        <div class="feature-media" data-aos="fade-right">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <!-- THE VIDEO SLIDE (First Slide) -->
+                    <div class="swiper-slide" data-type="video">
+                        <!-- Placeholder 16:9 video. Replace src with your gameplay video! -->
+                        <video autoplay loop muted playsinline>
+                            <source src="your-video.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="swiper-slide"><img src="ELIMINATED.png" alt="GUI 1"></div>
+
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-right">
+            <h2>3. CORES</h2>
+            <p>These are the cores through which the Special Gems can be crafted</p>
+        </div>
+        <div class="feature-media" data-aos="fade-left">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="GEMS.png" alt="Holo 1"></div>
+                    <div class="swiper-slide"><img src="TOREX_CORE.png" alt="Holo 2"></div>
+                    <div class="swiper-slide"><img src="IYTHRON_CORE.png" alt="Holo 2"></div>
+                    <div class="swiper-slide"><img src="MAJESTY_CORE.png" alt="Holo 2"></div>
+                    <div class="swiper-slide"><img src="EVRON_CORE.png" alt="Holo 2"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-left">
+            <h2>4. In-built SHOP GUI</h2>
+            <p>The plugin comes with Custom Premium SHOP_GUI(customizable).</p>
+        </div>
+        <div class="feature-media" data-aos="fade-right">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="SHOP_1.png" alt="Arena 1"></div>
+                    <div class="swiper-slide"><img src="SHOP_2.png" alt="Arena 2"></div>
+                    <div class="swiper-slide"><img src="SHOP_3.png" alt="Arena 2"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-right">
+            <h2>5. Withdrawable Time Vouchers & Online Time-Rewards</h2>
+            <p>Convert your Time into Physical vouchers and trade..</p>
+            <p>Stay Online and get Reward of 10min/hr</p>
+        </div>
+        <div class="feature-media" data-aos="fade-left">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="WITHDRAW_CROPPED_2.png" alt="Eco 1"></div>
+                    <div class="swiper-slide"><img src="VOUCHER.png" alt="Eco 2"></div>
+                    <div class="swiper-slide"><img src="REDEEMED_VOUCHER_CROPPED_2.png" alt="Eco 2"></div>
+                    <div class="swiper-slide"><img src="PLAYER_TIME_REWARD.png" alt="Eco 2"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-text" data-aos="fade-left">
+            <h2>6. TOGGELABLE BALANCE ACTION-BAR</h2>
+            <p>TOggle ON/OFF your Time-Balance Action Bar</p>
+        </div>
+        <div class="feature-media" data-aos="fade-right">
+            <div class="swiper effect-coverflow">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="BAL_OFF.png" alt="Config 1"></div>
+                    <div class="swiper-slide"><img src="BAL_ON.png" alt="Config 2"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer id="download">
+    <h2 style="font-size: 4rem; color: #fff; margin-bottom: 40px; text-shadow: 3px 3px 0 #000;" data-aos="fade-up">Ready To Upgrade?</h2>
+
+    <div data-aos="zoom-in" data-aos-delay="200">
+        <a href="https://www.spigotmc.org/resources/time-smp-time-steal-4-custom-legendary-gems-1-16-1-21.139115/download?version=653764" class="mc-btn"><i class="fa-solid fa-download"></i> Download</a>
+        <a href="https://www.spigotmc.org/resources/time-smp-time-steal-4-custom-legendary-gems-1-16-1-21.139115/" class="mc-btn spigot"><i class="fa-solid fa-cube"></i> Spigot Page</a>
+    </div>
+
+    <div data-aos="fade-up" data-aos-delay="400">
+        <div class="discord-box">
+            <i class="fa-brands fa-discord"></i> im_dhamaka
+        </div>
+    </div>
+</footer>
+
+<div id="lightbox">
+    <div class="lightbox-content-wrapper">
+        <div class="lightbox-close" id="lightbox-close"><i class="fa-solid fa-xmark"></i></div>
+        <div id="lightbox-media-container">
+            <!-- Image or Video injected here by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+    // 1. Initialize Animations on Scroll
+    AOS.init({
+        once: false,
+        offset: 150,
+        duration: 800
+    });
+
+    // 2. Setup Lightbox Elements
+    const lightbox = document.getElementById('lightbox');
+    const lightboxContainer = document.getElementById('lightbox-media-container');
+    const lightboxCloseBtn = document.getElementById('lightbox-close');
+
+    // Close lightbox function
+    const closeLightbox = () => {
+        lightbox.classList.remove('show');
+        setTimeout(() => {
+            lightboxContainer.innerHTML = ''; // Stop video playback when closed
+        }, 300); // Wait for transition
+    };
+
+    // Close on X button click
+    lightboxCloseBtn.addEventListener('click', closeLightbox);
+
+    // Close on clicking outside the media wrapper
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    // 3. Initialize Swiper with 3D Coverflow Effect
+    const swipers = document.querySelectorAll('.effect-coverflow');
+
+    swipers.forEach(swiperEl => {
+        const swiperInstance = new Swiper(swiperEl, {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            coverflowEffect: {
+                rotate: 20, // Reduced rotation to look better with 16:9
+                stretch: 0,
+                depth: 200,
+                modifier: 1,
+                slideShadows: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            // Lightbox Click Handler bound directly to Swiper to avoid drag/click conflicts
+            on: {
+                click: function (swiper, event) {
+                    const clickedSlide = swiper.clickedSlide;
+                    if (!clickedSlide) return;
+
+                    // Clear previous content
+                    lightboxContainer.innerHTML = '';
+
+                    // Check if video or image
+                    const videoEl = clickedSlide.querySelector('video');
+                    const imgEl = clickedSlide.querySelector('img');
+
+                    if (videoEl) {
+                        const newVid = document.createElement('video');
+                        newVid.src = videoEl.querySelector('source').src || videoEl.src;
+                        newVid.controls = true;
+                        newVid.autoplay = true;
+                        lightboxContainer.appendChild(newVid);
+                    } else if (imgEl) {
+                        const newImg = document.createElement('img');
+                        newImg.src = imgEl.src;
+                        lightboxContainer.appendChild(newImg);
+                    }
+
+                    // Show Lightbox
+                    lightbox.classList.add('show');
+                }
+            }
+        });
+    });
+
+    // --- Minecraft Helper Logic ---
+    // Show the helper 2 seconds after the page loads
+    setTimeout(() => {
+        document.getElementById('mc-helper').classList.add('show');
+    }, 2000);
+
+    // Close the helper when the 'X' is clicked
+    document.getElementById('close-helper').addEventListener('click', () => {
+        document.getElementById('mc-helper').classList.remove('show');
+    });
+</script>
+<!-- Minecraft Helper Notification -->
+<div id="mc-helper" class="mc-helper">
+    <div class="speech-bubble">
+        <p>Psst! Click on any image or video to zoom in! <i class="fa-solid fa-magnifying-glass-plus"></i></p>
+        <!-- Inline onclick guarantees the button works instantly -->
+        <button class="close-btn" onclick="document.getElementById('mc-helper').classList.remove('show'); setTimeout(() => document.getElementById('mc-helper').style.display='none', 600);"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <img src="https://crafatar.com/renders/body/8667ba71b85a4004af54457a9734eed7?overlay=true" alt="MC Helper" class="helper-img">
+</div>
+</body>
+</html>
